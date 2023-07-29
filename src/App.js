@@ -1,21 +1,29 @@
-import { Component } from 'react'; // a React class that allows all of the new components that we write in a class component format to get access to some of the functionalities that by default React has already built for us inside of this Component class
+import { useState } from 'react';
 
 import CardList from './components/card-list/card-list.component';
 import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
 const App = () => {
+  // useState gives us 2 values [value, setValue]; 1st is the value we want to store; 2nd is a setter function
+  const [searchField, setSearchField] = useState(''); // inside 'useState()' we need to pass the initial value
+  
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  }
+
   return (
     <div className="App">
       <h1 className='app-title'>Monsters Rolodex</h1>
 
-      {/*<SearchBox 
+      <SearchBox 
         className='monsters-search-box'
         onChangeHandler={onSearchChange} 
         placeholder='search monsters' 
       />
 
-      <CardList monsters={filteredMonsters} /> */}
+      {/* <CardList monsters={filteredMonsters} /> */}
     </div>
   );
 };
