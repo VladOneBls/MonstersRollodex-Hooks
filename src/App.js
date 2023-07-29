@@ -5,26 +5,33 @@ import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
 const App = () => {
-  // useState gives us 2 values [value, setValue]; 1st is the value we want to store; 2nd is a setter function
+  // DEF: useState gives us 2 values [value, setValue]; 1st is the value we want to store; 2nd is a setter function
   const [searchField, setSearchField] = useState(''); // inside 'useState()' we need to pass the initial value
   const [monsters, setMonsters] = useState([]);
-  console.log('render');
+  const [filteredMonsters, setFilterMonsters] = useState(monsters);
 
 
-  fetch('https://jsonplaceholder.typicode.com/users')
-    .then((response) => response.json())
-    .then((users) => setMonsters(users));
+  // DEF: useEffect takes 2 arguments (() => {}, []); 1st is a callback function; 2nd is an array of dependencies
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((users) => setMonsters(users));
+  }, []); // whenever any of the values inside of the dependency array change, is when the callback function will be run
+          // the callback function will be run the first time the function App is executed no matter what
+
+
+   useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
+    setFilterMonsters(newFilteredMonsters);
+   }, [monsters, searchField]);
 
 
   const onSearchChange = (event) => {
     const searchFieldString = event.target.value.toLocaleLowerCase();
     setSearchField(searchFieldString);
   }
-
-
-  const filteredMonsters = monsters.filter((monster) => {
-    return monster.name.toLocaleLowerCase().includes(searchField);
-  });
 
 
   return (
@@ -41,58 +48,5 @@ const App = () => {
     </div>
   );
 };
-
-// class App extends Component {
-//   constructor() {
-//     super();
-
-//     this.state = {
-//       monsters: [],
-//       searchField: '',
-//     };
-//   }
-
-  // componentDidMount() {
-  //   fetch('https://jsonplaceholder.typicode.com/users')
-  //     .then((response) => response.json())
-  //     .then((users) => this.setState(
-  //       () => {
-  //       return {monsters: users}
-  //       }
-  //     )
-  //   );
-  // }
-
-//   onSearchChange = (event) => {
-//     const searchField = event.target.value.toLocaleLowerCase();
-//     this.setState(() => {
-//       return { searchField }; // update the 'searchField' in the state with the current values received from the event
-//     });
-//   }
-
-//   // RENDER
-//   render() {
-//     const { monsters, searchField } = this.state;
-//     const { onSearchChange } = this;
-
-//     const filteredMonsters = monsters.filter((monster) => {
-//       return monster.name.toLocaleLowerCase().includes(searchField);
-//     });
-
-//     return (
-//       <div className="App">
-//         <h1 className='app-title'>Monsters Rolodex</h1>
-
-//         <SearchBox 
-//           className='monsters-search-box'
-//           onChangeHandler={onSearchChange} 
-//           placeholder='search monsters' 
-//         />
-
-//         <CardList monsters={filteredMonsters} />
-//       </div>
-//     );
-//   }
-// }
 
 export default App;
