@@ -5,9 +5,11 @@ import SearchBox from './components/search-box/search-box.component';
 import './App.css';
 
 const App = () => {
+  console.log('render');
   // useState gives us 2 values [value, setValue]; 1st is the value we want to store; 2nd is a setter function
   const [searchField, setSearchField] = useState(''); // inside 'useState()' we need to pass the initial value
-  
+  console.log(searchField);
+
   const onSearchChange = (event) => {
     const searchFieldString = event.target.value.toLocaleLowerCase();
     setSearchField(searchFieldString);
